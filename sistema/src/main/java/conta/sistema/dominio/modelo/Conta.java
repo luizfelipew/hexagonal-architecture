@@ -1,10 +1,10 @@
 package conta.sistema.dominio.modelo;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
-import static conta.sistema.dominio.modelo.Erro.*;
-import static java.util.Objects.*;
+import static conta.sistema.dominio.modelo.Erro.obrigatario;
+import static conta.sistema.dominio.modelo.Erro.saldoInsuficiente;
+import static java.util.Objects.isNull;
 
 public class Conta {
 
