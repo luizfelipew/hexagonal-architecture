@@ -36,10 +36,10 @@ public class Conta {
 
     public void debitar(BigDecimal debito) throws NegocioException {
         if (isNull(debito)){
-            obrigatario("Valor debito");
+            obrigatario("Valor débito");
         }
         if (debito.compareTo(BigDecimal.ZERO) <= 0){
-            obrigatario("Valor debito");
+            obrigatario("Valor débito");
         }
         if (debito.compareTo(saldo) > 0) {
             saldoInsuficiente();

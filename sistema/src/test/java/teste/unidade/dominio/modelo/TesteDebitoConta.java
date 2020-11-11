@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
-@DisplayName("Regra de Crédito de Conta")
+@DisplayName("Regra de Débito de Conta")
 public class TesteDebitoConta {
 
     BigDecimal cem = BigDecimal.valueOf(100);
@@ -24,47 +24,73 @@ public class TesteDebitoConta {
     }
 
     @Test
-    @DisplayName("Valor credito nulo como obrigatorio")
-    void deveVerificarValorCreditoNulo() {
+    @DisplayName("Valor debito nulo como obrigatorio")
+    void deveVerificarValorDebitoNulo() {
         try {
-            contaValida.creditar(null);
-            fail("valor crédito obrigatório");
+            contaValida.debitar(null);
+            fail("valor débito obrigatório");
         } catch (NegocioException e) {
-            assertEquals(e.getMessage(), "Valor crédito é obrigatório.");
+            assertEquals(e.getMessage(), "Valor débito é obrigatório.");
+            System.out.println(e.getMessage());
         }
     }
 
     @Test
-    @DisplayName("Valor credito negativo como obrigatorio")
-    void deveVerificarValorCreditoNegativo() {
+    @DisplayName("Valor debito negativo como obrigatorio")
+    void deveVerificarValorDebitoNegativo() {
         try {
-            contaValida.creditar(BigDecimal.valueOf(-10));
-            fail("valor crédito obrigatório");
+            contaValida.debitar(BigDecimal.valueOf(-10));
+            fail("valor débito obrigatório");
         } catch (NegocioException e) {
-            assertEquals(e.getMessage(), "Valor crédito é obrigatório.");
+            assertEquals(e.getMessage(), "Valor débito é obrigatório.");
+            System.out.println(e.getMessage());
         }
     }
 
     @Test
-    @DisplayName("Valor credito zerado como obrigatorio")
-    void deveVerificarValorCreditoZerado() {
+    @DisplayName("Valor debito zerado como obrigatorio")
+    void deveVerificarValorDebitoZerado() {
         try {
-            contaValida.creditar(BigDecimal.ZERO);
-            fail("valor crédito obrigatório");
+            contaValida.debitar(BigDecimal.ZERO);
+            fail("valor débito obrigatório");
         } catch (NegocioException e) {
-            assertEquals(e.getMessage(), "Valor crédito é obrigatório.");
+            assertEquals(e.getMessage(), "Valor débito é obrigatório.");
+            System.out.println(e.getMessage());
         }
     }
 
     @Test
-    @DisplayName("Valor credito acima de zero como obrigatorio")
-    void deveVerificarValorCreditoValido() {
+    @DisplayName("Valor debito acima do saldo")
+    void deveVerificarValorDebitoAcimaDoSaldo() {
         try {
-            contaValida.creditar(BigDecimal.ONE);
-            var saldoFinal = cem.add(BigDecimal.ONE);
-            assertEquals(contaValida.getSaldo(), saldoFinal, "Saldo deve bater");
+            contaValida.debitar(cem.add(BigDecimal.ONE));
+            fail("valor débito acima do saldo");
         } catch (NegocioException e) {
-            fail("Deve creditar com sucesso - " + e.getMessage());
+            assertEquals(e.getMessage(), "Saldo insuficiente.");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("Valor debito com saldo igual")
+    void deveVerificarValorDebitoComSaldoIgual() {
+        try {
+            contaValida.debitar(cem);
+            assertEquals(contaValida.getSaldo(), BigDecimal.ZERO, "Saldo deve zerar");
+        } catch (NegocioException e) {
+            fail("Deve debitar com sucesso - " + e.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("Valor debito menor que o saldo")
+    void deveVerificarValorDebitoMenorQueSaldo() {
+        try {
+            contaValida.debitar(BigDecimal.TEN);
+            var saldoFinal = cem.subtract(BigDecimal.TEN);
+            assertEquals(contaValida.getSaldo(), saldoFinal, "Saldo deve zerar");
+        } catch (NegocioException e) {
+            fail("Deve debitar com sucesso - " + e.getMessage());
         }
     }
 }
